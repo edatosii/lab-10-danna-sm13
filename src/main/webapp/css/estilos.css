@@ -1,446 +1,354 @@
+/* Estilos de la aplicación. Esta página YA está hecha: no es necesario modificarla. */
 /* =====================================================================
-   ÁRBOLES GENEALÓGICOS · estilos.css
-   Paleta:  terracota #D6613C · crema #F9ECE5 · ladrillo #68150A
-            azul #0B78B3 · índigo #1F0062
-   Idea: un "archivo familiar". La barra lateral es el tronco del árbol
-   (línea punteada con un nodo por enlace); las tarjetas son fichas de
-   archivo con sombra dura y numeración gigante.
+   Árboles genealógicos · estilos.css
+   Paleta: terracota #D6613C · crema #F9ECE5 · ladrillo #68150A
+           azul #0B78B3 · índigo #1F0062
+   Mismos nombres de clase que la versión anterior.
    ===================================================================== */
 
    :root {
-    --terracota: #D6613C;
-    --crema: #F9ECE5;
-    --ladrillo: #68150A;
-    --azul: #0B78B3;
     --indigo: #1F0062;
+    --indigo-2: #2c0a80;
+    --azul: #0B78B3;
+    --terracota: #D6613C;
+    --terracota-osc: #B84E2B;   /* tono más oscuro para que el texto blanco se lea bien */
+    --ladrillo: #68150A;
+    --crema: #F9ECE5;
+    --papel: #FFFBF8;
 
-    --papel: #FFF9F5;
-    --tinta: #2a0a05;
-    --ancho-menu: 280px;
+    --texto: #2a1410;
+    --gris: #7a6560;
+    --borde: #E6D3C9;
+    --fondo: var(--crema);
 
     --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
-    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --sombra-s: 0 1px 2px rgba(31, 0, 98, .06), 0 2px 8px rgba(104, 21, 10, .05);
+    --sombra-m: 0 2px 4px rgba(31, 0, 98, .06), 0 12px 28px -8px rgba(104, 21, 10, .22);
+    --radio: 14px;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
-    min-height: 100vh;
-    color: var(--tinta);
     font-family: var(--sans);
-    font-size: 16px;
+    color: var(--texto);
     line-height: 1.6;
-    /* papel crema con puntitos de "grano" */
-    background-color: var(--crema);
-    background-image:
-        radial-gradient(rgba(214, 97, 60, .18) 1px, transparent 1.4px),
-        radial-gradient(rgba(104, 21, 10, .08) 1px, transparent 1.4px);
-    background-size: 22px 22px, 37px 37px;
-    background-position: 0 0, 11px 17px;
-}
-
-/* =====================================================================
-   MENÚ: el tronco del árbol
-   ===================================================================== */
-.menu {
-    position: fixed;
-    inset: 0 auto 0 0;
-    width: var(--ancho-menu);
-    display: flex;
-    flex-direction: column;
-    padding: 28px 26px 22px 30px;
     background:
-        linear-gradient(180deg, rgba(11, 120, 179, .22), transparent 38%),
-        var(--indigo);
-    color: var(--crema);
-    border-right: 8px solid var(--terracota);
-    overflow-y: auto;
-    z-index: 10;
+        radial-gradient(900px 420px at 100% -10%, rgba(214, 97, 60, .16), transparent 70%),
+        radial-gradient(700px 380px at -10% 0%, rgba(11, 120, 179, .10), transparent 70%),
+        var(--fondo);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
 }
 
-.marca {
-    display: block;
-    margin-bottom: 34px;
-    padding-bottom: 18px;
-    border-bottom: 2px solid rgba(249, 236, 229, .25);
+/* ---------------------------------------------------------------- menú */
+.menu {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .15rem;
+    padding: 0 clamp(1rem, 4vw, 2.5rem);
+    background: linear-gradient(120deg, var(--indigo) 0%, var(--indigo-2) 100%);
+    box-shadow: 0 6px 24px -10px rgba(31, 0, 98, .6);
+    border-bottom: 3px solid var(--terracota);
+}
+
+.menu .marca {
+    margin-right: 2rem;
+    padding: 1rem 0;
     font-family: var(--serif);
-    font-size: 1.45rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    line-height: 1.15;
     letter-spacing: .01em;
     color: var(--crema);
     text-decoration: none;
 }
 
-.enlace {
+.menu a.enlace {
     position: relative;
-    display: block;
-    margin-left: 12px;
-    padding: 14px 0 14px 32px;
-    border-left: 2px dashed rgba(249, 236, 229, .38); /* el tronco */
-    color: rgba(249, 236, 229, .86);
+    padding: 1.15rem .95rem;
+    font-size: .92rem;
     font-weight: 600;
+    letter-spacing: .02em;
+    color: rgba(249, 236, 229, .75);
     text-decoration: none;
-    transition: color .2s, padding-left .2s;
+    transition: color .2s;
 }
 
-/* el nodo (la "persona") de cada rama */
-.enlace::before {
+.menu a.enlace::after {
     content: "";
     position: absolute;
-    left: -9px;
-    top: 50%;
-    width: 16px;
-    height: 16px;
-    margin-top: -8px;
-    border-radius: 50%;
-    background: var(--indigo);
-    border: 3px solid var(--crema);
-    transition: background .2s, border-color .2s, box-shadow .2s;
-}
-
-.enlace:hover {
-    color: var(--terracota);
-    padding-left: 38px;
-}
-
-.enlace:hover::before {
-    border-color: var(--terracota);
-}
-
-.enlace.activo {
-    color: #fff;
-}
-
-.enlace.activo::before {
+    left: .95rem;
+    right: .95rem;
+    bottom: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
     background: var(--terracota);
-    border-color: var(--crema);
-    box-shadow: 0 0 0 5px var(--azul);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .25s ease;
 }
 
-.menu::after {
-    content: "Ahnentafel  ·  d’Aboville";
-    margin-top: auto;
-    padding-top: 24px;
-    font-size: .72rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: rgba(249, 236, 229, .5);
-}
+.menu a.enlace:hover { color: #fff; }
+.menu a.enlace:hover::after,
+.menu a.enlace.activo::after { transform: scaleX(1); }
+.menu a.enlace.activo { color: #fff; }
 
-/* =====================================================================
-   CONTENIDO
-   ===================================================================== */
+/* ---------------------------------------------------------------- contenido */
 main {
-    margin-left: var(--ancho-menu);
-    max-width: calc(var(--ancho-menu) + 920px);
-    padding: 64px clamp(24px, 5vw, 72px) 80px;
+    max-width: 1100px;
+    margin: 2.5rem auto 4rem;
+    padding: 0 clamp(1rem, 4vw, 2rem);
 }
 
 h1 {
-    position: relative;
-    display: inline-block;
-    margin: 0 0 22px;
+    margin: 0 0 .4rem;
     font-family: var(--serif);
-    font-size: clamp(2.3rem, 5.4vw, 4.2rem);
+    font-size: clamp(2rem, 4.5vw, 3rem);
     font-weight: 800;
-    line-height: 1.02;
+    line-height: 1.08;
     letter-spacing: -.02em;
     color: var(--ladrillo);
 }
 
-/* subrayado grueso desfasado, como un sello */
-h1::after {
-    content: "";
-    position: absolute;
-    left: -6px;
-    right: -6px;
-    bottom: .08em;
-    height: .22em;
-    background: var(--azul);
-    opacity: .85;
-    z-index: -1;
-    transform: rotate(-.7deg);
-}
-
 h2 {
-    margin: 0 0 8px;
+    margin: 0 0 .8rem;
     font-family: var(--serif);
-    font-size: 1.55rem;
-    line-height: 1.15;
-    color: var(--ladrillo);
-}
-
-h3 {
-    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 700;
     color: var(--indigo);
 }
 
 .sub {
     max-width: 62ch;
-    margin: 0 0 46px;
-    padding-left: 18px;
-    border-left: 5px solid var(--terracota);
-    font-size: 1.12rem;
-    color: var(--indigo);
+    margin: 0 0 2rem;
+    font-size: 1.08rem;
+    color: var(--gris);
 }
 
-.ayuda {
-    margin: 0;
-    color: rgba(42, 10, 5, .78);
-}
+.ayuda { color: var(--gris); font-size: .93rem; }
 
-a { color: var(--azul); }
-
-/* =====================================================================
-   INICIO: fichas de archivo
-   ===================================================================== */
-.inicio {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    gap: 44px 40px;
-    counter-reset: ficha;
-}
-
+/* ---------------------------------------------------------------- tarjetas */
 .tarjeta {
     position: relative;
-    display: block;
-    overflow: hidden;
-    padding: 34px 30px 66px;
+    margin-bottom: 1.5rem;
+    padding: 1.4rem 1.6rem;
     background: var(--papel);
-    border: 3px solid var(--ladrillo);
-    border-radius: 4px 26px 4px 26px; /* esquinas asimétricas */
-    box-shadow: 10px 10px 0 var(--azul);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra-s);
+}
+
+/* filete de color en la parte superior */
+.tarjeta::before {
+    content: "";
+    position: absolute;
+    left: 1.6rem;
+    top: -1px;
+    width: 56px;
+    height: 4px;
+    border-radius: 0 0 4px 4px;
+    background: var(--terracota);
+}
+
+.inicio {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 1.25rem;
+}
+
+.inicio a.tarjeta {
+    display: block;
+    margin: 0;
+    padding-bottom: 2.6rem;
     color: inherit;
     text-decoration: none;
-    counter-increment: ficha;
-    transition: transform .22s cubic-bezier(.2, .9, .3, 1.3), box-shadow .22s;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s;
 }
 
-.tarjeta:nth-child(even) {
-    box-shadow: 10px 10px 0 var(--terracota);
-    transform: translateY(26px) rotate(.6deg);
-}
-
-.tarjeta:nth-child(odd) { transform: rotate(-.6deg); }
-
-/* número gigante, solo contorno */
-.tarjeta::before {
-    content: counter(ficha, decimal-leading-zero);
+.inicio a.tarjeta::after {
+    content: "→";
     position: absolute;
-    right: 16px;
-    top: -14px;
-    font-family: var(--serif);
-    font-size: 7rem;
-    font-weight: 800;
+    right: 1.4rem;
+    bottom: 1rem;
+    font-size: 1.4rem;
     line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 2px rgba(214, 97, 60, .55);
-    pointer-events: none;
+    color: var(--terracota);
+    transition: transform .25s ease;
 }
 
-/* franja inferior con flecha */
-.tarjeta::after {
-    content: "Abrir  →";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 12px 30px;
-    background: var(--indigo);
-    color: var(--crema);
-    font-size: .82rem;
-    font-weight: 700;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    transition: background .2s, color .2s, padding-left .2s;
+.inicio a.tarjeta:hover {
+    transform: translateY(-4px);
+    border-color: var(--terracota);
+    box-shadow: var(--sombra-m);
 }
 
-.tarjeta:hover,
-.tarjeta:focus-visible {
-    transform: translate(-5px, -5px) rotate(0);
-    box-shadow: 16px 16px 0 var(--ladrillo);
-    outline: none;
+.inicio a.tarjeta:hover::after { transform: translateX(6px); }
+.inicio h2 { margin-bottom: .4rem; }
+
+/* ---------------------------------------------------------------- mensajes */
+.mensaje {
+    margin: 0 0 1.25rem;
+    padding: .8rem 1.1rem;
+    border: 1px solid;
+    border-left-width: 5px;
+    border-radius: 10px;
+    font-weight: 500;
 }
 
-.tarjeta:nth-child(even):hover,
-.tarjeta:nth-child(even):focus-visible {
-    transform: translate(-5px, 21px) rotate(0);
-}
+.mensaje.ok { background: #E8F3FA; border-color: #A9D3EA; border-left-color: var(--azul); color: #0A4F75; }
+.mensaje.error { background: #FCEDE7; border-color: #F0C1B0; border-left-color: var(--ladrillo); color: var(--ladrillo); }
 
-.tarjeta:hover::after,
-.tarjeta:focus-visible::after {
-    background: var(--terracota);
-    color: var(--indigo);
-    padding-left: 40px;
-}
-
-.tarjeta h2 { position: relative; max-width: 88%; }
-.tarjeta .ayuda { position: relative; }
-
-/* =====================================================================
-   FORMULARIOS, BOTONES Y TABLAS (para las demás páginas)
-   ===================================================================== */
+/* ---------------------------------------------------------------- formularios */
 label {
     display: block;
-    margin: 18px 0 6px;
-    font-size: .8rem;
+    margin: 1rem 0 .3rem;
+    font-size: .78rem;
     font-weight: 700;
-    letter-spacing: .12em;
+    letter-spacing: .08em;
     text-transform: uppercase;
     color: var(--ladrillo);
 }
 
-input, textarea, select {
+input[type=text], input[type=number], textarea {
     width: 100%;
-    padding: 11px 14px;
-    background: var(--papel);
-    border: 2px solid var(--ladrillo);
-    border-radius: 3px 12px 3px 12px;
-    color: var(--tinta);
+    padding: .65rem .85rem;
+    background: #fff;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
     font: inherit;
-    transition: box-shadow .15s, border-color .15s;
+    color: var(--texto);
+    transition: border-color .15s, box-shadow .15s;
+}
+
+input[type=text]:focus, input[type=number]:focus, textarea:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 4px rgba(11, 120, 179, .16);
 }
 
 textarea {
-    min-height: 240px;
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: .92rem;
-    line-height: 1.55;
-    background-image: repeating-linear-gradient(transparent 0, transparent 1.5em, rgba(11, 120, 179, .12) 1.5em, rgba(11, 120, 179, .12) calc(1.5em + 1px));
-    background-attachment: local;
+    min-height: 12rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .93rem;
+    line-height: 1.65;
 }
 
-input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--azul);
-    box-shadow: 5px 5px 0 var(--azul);
-}
-
-button, .boton, input[type="submit"] {
+/* ---------------------------------------------------------------- botones */
+.boton {
     display: inline-block;
-    width: auto;
-    margin-top: 16px;
-    padding: 12px 24px;
-    background: var(--ladrillo);
-    border: 3px solid var(--ladrillo);
-    border-radius: 3px 14px 3px 14px;
-    box-shadow: 5px 5px 0 var(--terracota);
-    color: var(--crema);
+    padding: .62rem 1.2rem;
+    background: var(--indigo);
+    border: 0;
+    border-radius: 999px;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .18), 0 6px 14px -6px rgba(31, 0, 98, .6);
     font: inherit;
-    font-weight: 700;
-    letter-spacing: .06em;
+    font-weight: 600;
+    letter-spacing: .02em;
+    color: #fff;
     text-decoration: none;
     cursor: pointer;
-    transition: transform .15s, box-shadow .15s, background .15s, color .15s;
+    transition: transform .15s, box-shadow .15s, background .15s;
 }
 
-button:hover, .boton:hover, input[type="submit"]:hover {
-    background: var(--terracota);
-    color: var(--indigo);
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0 var(--indigo);
-}
+.boton:hover { background: var(--indigo-2); transform: translateY(-1px); }
+.boton:active { transform: translateY(1px); box-shadow: none; }
+.boton:focus-visible { outline: 3px solid var(--azul); outline-offset: 2px; }
 
-button:active, .boton:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--indigo); }
+.boton.acento { background: var(--terracota-osc); box-shadow: 0 2px 0 rgba(0, 0, 0, .18), 0 6px 14px -6px rgba(184, 78, 43, .7); }
+.boton.acento:hover { background: var(--ladrillo); }
+.boton.peligro { background: var(--ladrillo); box-shadow: 0 2px 0 rgba(0, 0, 0, .25), 0 6px 14px -6px rgba(104, 21, 10, .7); }
+.boton.peligro:hover { background: #8a1d0e; }
+.boton.suave { background: #fff; color: var(--indigo); border: 1px solid var(--borde); box-shadow: var(--sombra-s); }
+.boton.suave:hover { background: var(--crema); border-color: var(--terracota); }
+.boton[disabled] { opacity: .4; cursor: not-allowed; transform: none; }
 
-button:focus-visible, .boton:focus-visible, a:focus-visible {
-    outline: 3px solid var(--azul);
-    outline-offset: 3px;
-}
+.fila { display: flex; flex-wrap: wrap; gap: .85rem; align-items: flex-end; }
+.fila > div { flex: 1 1 140px; }
+.acciones { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.1rem; }
 
-.boton.secundario, button.secundario {
-    background: var(--azul);
-    border-color: var(--azul);
-    color: #fff;
-    box-shadow: 5px 5px 0 var(--indigo);
-}
+/* ---------------------------------------------------------------- tablas */
+table { width: 100%; border-collapse: collapse; }
 
-.boton.peligro, button.peligro {
-    background: var(--terracota);
-    border-color: var(--ladrillo);
-    color: var(--indigo);
-    box-shadow: 5px 5px 0 var(--ladrillo);
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--papel);
-    border: 3px solid var(--ladrillo);
-    box-shadow: 10px 10px 0 var(--azul);
-}
+th, td { padding: .7rem .75rem; text-align: left; border-bottom: 1px solid var(--borde); }
 
 th {
-    padding: 14px 16px;
-    background: var(--indigo);
-    color: var(--crema);
-    font-size: .78rem;
-    letter-spacing: .16em;
-    text-align: left;
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .12em;
     text-transform: uppercase;
+    color: var(--gris);
+    border-bottom: 2px solid var(--ladrillo);
 }
 
-td { padding: 13px 16px; border-bottom: 1px dashed rgba(104, 21, 10, .35); }
-tr:nth-child(even) td { background: rgba(214, 97, 60, .09); }
-tr:hover td { background: rgba(11, 120, 179, .12); }
+tr.fila-miembro { cursor: pointer; transition: background .15s; }
+tr.fila-miembro:hover { background: rgba(214, 97, 60, .08); }
+tr.fila-miembro.seleccionada { background: rgba(11, 120, 179, .12); box-shadow: inset 4px 0 0 var(--azul); }
 
-/* mensajes */
-.error, .ok, .mensaje {
-    margin: 20px 0;
-    padding: 14px 18px;
-    background: var(--papel);
-    border: 2px solid var(--ladrillo);
-    border-left-width: 10px;
-    border-radius: 3px 14px 3px 14px;
-    font-weight: 600;
+code {
+    padding: .12rem .4rem;
+    background: rgba(31, 0, 98, .07);
+    border-radius: 5px;
+    font-size: .9em;
+    color: var(--indigo);
 }
 
-.error { border-color: var(--terracota); border-left-color: var(--ladrillo); color: var(--ladrillo); }
-.ok { border-color: var(--azul); color: var(--indigo); }
+pre.ejemplo {
+    margin: .5rem 0;
+    padding: .9rem 1.1rem;
+    overflow: auto;
+    background: var(--indigo);
+    border-radius: 10px;
+    border-left: 4px solid var(--terracota);
+    font-size: .9rem;
+    line-height: 1.7;
+    color: var(--crema);
+}
 
-/* vista previa del árbol (por si usa estas clases) */
-.arbol ul { list-style: none; margin: 0; padding-left: 28px; border-left: 2px dashed var(--terracota); }
-.arbol > ul { padding-left: 0; border: 0; }
-.arbol li { position: relative; margin: 10px 0; }
-.nodo {
+/* ---------------------------------------------------------------- lienzo del árbol */
+.lienzo {
+    overflow: auto;
+    padding: .75rem;
+    text-align: center;
+    background:
+        radial-gradient(rgba(104, 21, 10, .13) 1px, transparent 1.4px) 0 0 / 20px 20px,
+        #fff;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: inset 0 1px 6px rgba(104, 21, 10, .06);
+}
+
+.lienzo canvas { display: inline-block; }
+
+.leyenda { display: flex; flex-wrap: wrap; gap: 1.2rem; margin: .8rem 0 0; font-size: .85rem; color: var(--gris); }
+
+.leyenda span::before {
+    content: "";
     display: inline-block;
-    padding: 7px 14px;
-    background: var(--papel);
-    border: 2px solid var(--ladrillo);
-    border-radius: 3px 12px 3px 12px;
-    box-shadow: 4px 4px 0 var(--azul);
+    width: .85rem;
+    height: .85rem;
+    margin-right: .4rem;
+    vertical-align: -2px;
+    border: 2px solid;
+    border-radius: 4px;
 }
-.nodo.seleccionado { background: var(--terracota); color: var(--indigo); }
 
-/* =====================================================================
-   MÓVIL: el tronco pasa a ser una barra horizontal
-   ===================================================================== */
-@media (max-width: 860px) {
-    .menu {
-        position: static;
-        width: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 4px 22px;
-        padding: 16px 20px;
-        border-right: 0;
-        border-bottom: 8px solid var(--terracota);
-    }
-    .menu::after { display: none; }
-    .marca { width: 100%; margin: 0 0 6px; padding-bottom: 10px; }
-    .enlace { margin: 0; padding: 8px 0 8px 22px; border-left: 0; font-size: .92rem; }
-    .enlace::before { left: 0; width: 12px; height: 12px; margin-top: -6px; border-width: 2px; }
-    .enlace:hover { padding-left: 22px; }
-    main { margin-left: 0; padding-top: 40px; }
-    .tarjeta:nth-child(even) { transform: rotate(.6deg); }
-    .tarjeta:nth-child(even):hover, .tarjeta:nth-child(even):focus-visible { transform: translate(-5px, -5px); }
-}
+/* Estos colores deben coincidir con los que dibuja el canvas en JavaScript */
+.leyenda .l-sujeto::before { background: #fff3d6; border-color: #c8741a; }
+.leyenda .l-asc::before { background: #e3eefb; border-color: #2f6db5; }
+.leyenda .l-desc::before { background: #e2f4e6; border-color: #2f8a4a; }
+
+/* ---------------------------------------------------------------- distribución */
+.panel { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+@media (min-width: 900px) { .panel { grid-template-columns: 1fr 1fr; } }
+
+.oculto { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; scroll-behavior: auto !important; }
+    * { transition: none !important; }
 }
